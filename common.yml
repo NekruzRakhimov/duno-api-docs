@@ -1,0 +1,527 @@
+openapi: 3.0.2
+security:
+  - BearerAuth: [ authorized ]
+
+info:
+  title: API - Duno Back-End
+  description: |-
+    This documentation describes all the methods and interfaces available for Duno Back-End
+  contact:
+    email: nekruzrakhimov@icloud.com
+  version: 1.0.0
+servers:
+  - url: localhost:8787/v1
+    description: Local server
+tags:
+  - name: auth
+    description: Endpoints related to authorization
+  - name: users
+    description: Endpoints related to user profile
+paths:
+  /auth/otp:
+    post:
+      security: [ ]
+      tags:
+        - auth
+      summary: Send OTP
+      description: Send OTP to provided email in order to confirm it
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  otp_ttl_seconds:
+                    type: integer
+                    description: Time to liveof sent OTP
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /auth/sign-up:
+    post:
+      security: [ ]
+      tags:
+        - auth
+      summary: Sign Up
+      description: Signing up and confirming OTP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token
+                  refresh_token:
+                    type: string
+                    description: Refresh token
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /auth/sign-in:
+    post:
+      security: [ ]
+      tags:
+        - auth
+      summary: Sign In
+      description: Signing up and confirming OTP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token
+                  refresh_token:
+                    type: string
+                    description: Refresh token
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /auth/refresh:
+    get:
+      security: [ ]
+      tags:
+        - auth
+      summary: Refesh tokens
+      description: Refresh token pair by providing Refresh-Token
+      parameters:
+        - name: Duno-Refresh-Token
+          in: header
+          required: true
+          description: "Provide Refresh-Token to get new pair of tokens"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token
+                  refresh_token:
+                    type: string
+                    description: Refresh token
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /api/me:
+    get:
+      tags:
+        - users
+      summary: get user info
+      description: Get user profile info
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - users
+      summary: update user profile info
+      description: Update user profile fields info
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User info was updated successfully"
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/me/password:
+    put:
+      tags:
+        - users
+      summary: update user password
+      description: Update user password using old password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserPasswordRequest"
+      responses:
+        "200":
+          description: "Successfully authenticated"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User password was updated successfully"
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid password, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    UpdateUserPasswordRequest:
+      type: object
+      properties:
+        old_password:
+          type: string
+          description: "user current password"
+          example: "old_password"
+        new_password:
+          type: string
+          description: "user new password"
+          example: "new_password"
+    UpdateUserRequest:
+      type: object
+      properties:
+        fname:
+          type: string
+          description: "User's first name"
+          example: "Ivan"
+        lname:
+          type: string
+          description: "User's last name"
+          example: "Ivanov"
+        email:
+          type: string
+          format: email  # Указывает, что это адрес электронной почты
+          description: "User's email"
+          example: "test@test.com"
+        country:
+          type: string
+          description: "User's country"
+          example: "Russia"
+        city:
+          type: string
+          description: "User's city"
+          example: "Moscow"
+        state_or_region:
+          type: string
+          description: "User's state or region"
+          example: "Moscow"
+        zip:
+          type: string
+          description: "User's zip code"
+          example: "101000"
+        most_recent_job_title:
+          type: string
+          description: "User's most recent job title"
+          example: "Developer"
+        is_student:
+          type: boolean
+          description: "Indicates if the user is a student"
+          example: false
+        looking_for_job:
+          type: boolean
+          description: "Indicates if the user is looking for a job"
+          example: true
+        job_titles_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job titles the user is interested in"
+          example: [ "Software Engineer", "Data Analyst" ]
+        job_locations_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job locations the user is interested in"
+          example: [ "Saint Petersburg", "Kazan" ]
+        is_open_to_remote:
+          type: boolean
+          description: "Indicates if the user is open to remote work"
+          example: true
+        get_notified:
+          type: boolean
+          description: "Indicates if the user wants to receive notifications"
+          example: true
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "Unique identifier for the user"
+          example: 1
+        fname:
+          type: string
+          description: "User's first name"
+          example: "Ivan"
+        lname:
+          type: string
+          description: "User's last name"
+          example: "Ivanov"
+        email:
+          type: string
+          format: email  # Указывает, что это адрес электронной почты
+          description: "User's email"
+          example: "test@test.com"
+        password:
+          type: string
+          description: "User's password (optional)"
+          example: "securePassword123"
+        country:
+          type: string
+          description: "User's country"
+          example: "Russia"
+        city:
+          type: string
+          description: "User's city"
+          example: "Moscow"
+        state_or_region:
+          type: string
+          description: "User's state or region"
+          example: "Moscow"
+        zip:
+          type: string
+          description: "User's zip code"
+          example: "101000"
+        most_recent_job_title:
+          type: string
+          description: "User's most recent job title"
+          example: "Developer"
+        is_student:
+          type: boolean
+          description: "Indicates if the user is a student"
+          example: false
+        looking_for_job:
+          type: boolean
+          description: "Indicates if the user is looking for a job"
+          example: true
+        job_titles_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job titles the user is interested in"
+          example: ["Software Engineer", "Data Analyst"]
+        job_locations_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job locations the user is interested in"
+          example: ["Saint Petersburg", "Kazan"]
+        is_open_to_remote:
+          type: boolean
+          description: "Indicates if the user is open to remote work"
+          example: true
+        get_notified:
+          type: boolean
+          description: "Indicates if the user wants to receive notifications"
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          description: "Timestamp when the user was created"
+          example: "2023-10-07T12:34:56Z"
+        updated_at:
+          type: string
+          format: date-time
+          description: "Timestamp when the user was last updated"
+          example: "2023-10-07T12:34:56Z"
+
+    SignUpRequest:
+      type: object
+      properties:
+        otp:
+          type: string
+          description: "One-time password for authentication"
+          example: "123456"
+        fname:
+          type: string
+          description: "User's first name"
+          example: "Ivan"
+        lname:
+          type: string
+          description: "User's last name"
+          example: "Ivanov"
+        email:
+          type: string
+          description: "User's email"
+          example: "test@test.com"
+        password:
+          type: string
+          description: "User's password"
+          example: "securePassword123"
+        country:
+          type: string
+          description: "User's country"
+          example: "Russia"
+        city:
+          type: string
+          description: "User's city"
+          example: "Moscow"
+        state_or_region:
+          type: string
+          description: "User's state or region"
+          example: "Moscow"
+        zip:
+          type: string
+          description: "User's zip code"
+          example: "101000"
+        most_recent_job_title:
+          type: string
+          description: "User's most recent job title"
+          example: "Developer"
+        is_student:
+          type: boolean
+          description: "Indicates if the user is a student"
+          example: false
+        looking_for_job:
+          type: boolean
+          description: "Indicates if the user is looking for a job"
+          example: true
+        job_titles_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job titles the user is interested in"
+          example: ["Software Engineer", "Data Analyst"]
+        job_locations_of_interest:
+          type: array
+          items:
+            type: string
+          description: "List of job locations the user is interested in"
+          example: ["Saint Petersburg", "Kazan"]
+        is_open_to_remote:
+          type: boolean
+          description: "Indicates if the user is open to remote work"
+          example: true
+        get_notified:
+          type: boolean
+          description: "Indicates if the user wants to receive notifications"
+          example: true
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: "User's email"
+          example: "test@test.com"
+    SignInRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: "User's email"
+          example: "test@test.com"
+        password:
+          type: string
+          description: "User's password"
+          example: "test_password"
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: String represents a set of errors occurred split by '\n'
+          example: "Errors.Error1\\nErrors.Error2\\nexplanation text"

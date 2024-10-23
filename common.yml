@@ -17,6 +17,8 @@ tags:
     description: Endpoints related to authorization
   - name: users
     description: Endpoints related to user profile
+  - name: posts
+    description: Endpoints related to user posts
 paths:
   /auth/otp:
     post:
@@ -264,6 +266,271 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /api/posts:
+    get:
+      tags:
+        - posts
+      summary: Get all posts
+      description: Retrieve a list of all posts for the authenticated user.
+      responses:
+        "200":
+          description: Successfully retrieved posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Post"
+        "401":
+          description: Unauthorized (user not found, invalid session, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - posts
+      summary: Create a new post
+      description: Create a new post for the authenticated user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        "201":
+          description: Post created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "post created successfully"
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid session, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/posts/{id}:
+    get:
+      tags:
+        - posts
+      summary: Retrieve a specific post by ID
+      description: Get the details of a post using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the post to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved the post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "400":
+          description: Bad request (invalid ID format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - posts
+      summary: Update an existing post
+      description: Update the details of a post using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the post to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Updated Post Title"
+                body:
+                  type: string
+                  example: "This is the updated content of the post."
+                is_archived:
+                  type: boolean
+                  example: false
+                is_deleted:
+                  type: boolean
+                  example: false
+              required:
+                - title
+                - body
+      responses:
+        "200":
+          description: Post updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "post updated successfully"
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user not found, invalid session, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - posts
+      summary: Delete a specific post
+      description: Remove a post using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the post to delete
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "post deleted successfully"
+        "400":
+          description: Bad request (invalid ID format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/posts/archive/{id}:
+    patch:
+      tags:
+        - posts
+      summary: Archive a specific post
+      description: Archive a post using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the post to archive
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Post archived successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "post archived successfully"
+        "400":
+          description: Bad request (invalid ID format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+
+
 components:
   securitySchemes:
     BearerAuth:
@@ -271,6 +538,35 @@ components:
       scheme: bearer
 
   schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "My First Post"
+        body:
+          type: string
+          example: "This is the body of the post."
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-02T12:00:00Z"
+        is_archived:
+          type: boolean
+          example: false
+        is_deleted:
+          type: boolean
+          example: false
     UpdateUserPasswordRequest:
       type: object
       properties:
@@ -403,13 +699,13 @@ components:
           items:
             type: string
           description: "List of job titles the user is interested in"
-          example: ["Software Engineer", "Data Analyst"]
+          example: [ "Software Engineer", "Data Analyst" ]
         job_locations_of_interest:
           type: array
           items:
             type: string
           description: "List of job locations the user is interested in"
-          example: ["Saint Petersburg", "Kazan"]
+          example: [ "Saint Petersburg", "Kazan" ]
         is_open_to_remote:
           type: boolean
           description: "Indicates if the user is open to remote work"
@@ -485,13 +781,13 @@ components:
           items:
             type: string
           description: "List of job titles the user is interested in"
-          example: ["Software Engineer", "Data Analyst"]
+          example: [ "Software Engineer", "Data Analyst" ]
         job_locations_of_interest:
           type: array
           items:
             type: string
           description: "List of job locations the user is interested in"
-          example: ["Saint Petersburg", "Kazan"]
+          example: [ "Saint Petersburg", "Kazan" ]
         is_open_to_remote:
           type: boolean
           description: "Indicates if the user is open to remote work"

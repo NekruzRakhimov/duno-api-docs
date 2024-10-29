@@ -529,6 +529,209 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
 
+  /api/vacancies:
+    get:
+      tags:
+        - vacancies
+      summary: Retrieve all vacancies
+      description: Get a list of all vacancies accessible to the authorized user.
+      responses:
+        "200":
+          description: Successfully retrieved list of vacancies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Vacancy"
+        "401":
+          description: Unauthorized (missing or invalid user ID)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - vacancies
+      summary: Create a new vacancy
+      description: Creates a new vacancy for the authenticated user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VacancyInput"
+      responses:
+        "201":
+          description: Successfully created the vacancy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "vacancy created successfully"
+        "400":
+          description: Bad request (invalid input format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized (user ID missing or invalid)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/vacancies/{id}:
+    get:
+      tags:
+        - vacancies
+      summary: Retrieve a specific vacancy by ID
+      description: Get the details of a vacancy using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the vacancy to retrieve
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved the vacancy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vacancy"
+        "400":
+          description: Bad request (invalid ID format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Vacancy not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - vacancies
+      summary: Update a specific vacancy by ID
+      description: Update the details of a vacancy using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the vacancy to update
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VacancyUpdate"
+      responses:
+        "200":
+          description: Successfully updated the vacancy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "vacancy updated successfully"
+        "400":
+          description: Bad request (invalid data format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Vacancy not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - vacancies
+      summary: Delete a specific vacancy by ID
+      description: Delete a vacancy using its unique identifier.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the vacancy to delete
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully deleted the vacancy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "vacancy deleted successfully"
+        "400":
+          description: Bad request (invalid ID format)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Vacancy not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
 
 components:
@@ -538,6 +741,145 @@ components:
       scheme: bearer
 
   schemas:
+    VacancyUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        salary:
+          type: number
+          format: float
+        employment_type:
+          type: string
+        requirements:
+          type: string
+        responsibilities:
+          type: string
+        expiry_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+        remote:
+          type: boolean
+        contact_email:
+          type: string
+          format: email
+    VacancyInput:
+      type: object
+      required:
+        - title
+        - description
+        - location
+        - salary
+        - employment_type
+        - requirements
+        - responsibilities
+        - posted_date
+        - expiry_date
+      properties:
+        title:
+          type: string
+          description: Title of the vacancy
+        description:
+          type: string
+          description: Detailed description of the vacancy
+        location:
+          type: string
+          description: Location of the vacancy
+        salary:
+          type: number
+          format: float
+          description: Salary offered for the vacancy
+        employment_type:
+          type: string
+          description: Type of employment (e.g., full-time, part-time)
+        requirements:
+          type: string
+          description: Requirements for the vacancy
+        responsibilities:
+          type: string
+          description: Responsibilities of the position
+        posted_date:
+          type: string
+          format: date-time
+          description: Date when the vacancy is posted
+        expiry_date:
+          type: string
+          format: date-time
+          description: Expiration date of the vacancy
+        status:
+          type: string
+          description: Status of the vacancy (e.g., open, closed)
+        remote:
+          type: boolean
+          description: Indicates if the position is remote
+        contact_email:
+          type: string
+          format: email
+          description: Contact email for applications
+      Error:
+    Vacancy:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the vacancy
+        title:
+          type: string
+          description: Title of the vacancy
+        description:
+          type: string
+          description: Detailed description of the vacancy
+        company_id:
+          type: integer
+          description: ID of the company posting the vacancy
+        location:
+          type: string
+          description: Location of the vacancy
+        salary:
+          type: number
+          format: float
+          description: Salary offered for the vacancy
+        employment_type:
+          type: string
+          description: Type of employment (e.g., full-time, part-time)
+        requirements:
+          type: string
+          description: Requirements for the vacancy
+        responsibilities:
+          type: string
+          description: Responsibilities of the position
+        posted_date:
+          type: string
+          format: date-time
+          description: Date when the vacancy was posted
+        expiry_date:
+          type: string
+          format: date-time
+          description: Date when the vacancy expires
+        status:
+          type: string
+          description: Current status of the vacancy (e.g., open, closed)
+        remote:
+          type: boolean
+          description: Indicates if the position is remote
+        contact_email:
+          type: string
+          format: email
+          description: Contact email for applications
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the record was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the record was last updated
     Post:
       type: object
       properties:

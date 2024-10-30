@@ -746,29 +746,41 @@ components:
       properties:
         title:
           type: string
+          example: "Senior Software Engineer"
         description:
           type: string
+          example: "Develop and maintain web applications, ensuring high performance and responsiveness."
         location:
           type: string
+          example: "San Francisco, CA"
         salary:
           type: number
           format: float
+          example: 120000.00
         employment_type:
           type: string
+          example: "Full-time"
         requirements:
           type: string
+          example: "5+ years of experience in software development, proficiency in Golang and JavaScript."
         responsibilities:
           type: string
+          example: "Design, develop, and deploy scalable applications."
         expiry_date:
           type: string
           format: date-time
+          example: "2024-12-31T23:59:59Z"
         status:
           type: string
+          example: "Open"
         remote:
           type: boolean
+          example: true
         contact_email:
           type: string
           format: email
+          example: "hr@company.com"
+
     VacancyInput:
       type: object
       required:
@@ -785,101 +797,129 @@ components:
         title:
           type: string
           description: Title of the vacancy
+          example: "Product Manager"
         description:
           type: string
           description: Detailed description of the vacancy
+          example: "Lead the product team to develop and manage the product roadmap."
         location:
           type: string
           description: Location of the vacancy
+          example: "New York, NY"
         salary:
           type: number
           format: float
           description: Salary offered for the vacancy
+          example: 95000.00
         employment_type:
           type: string
           description: Type of employment (e.g., full-time, part-time)
+          example: "Part-time"
         requirements:
           type: string
           description: Requirements for the vacancy
+          example: "3+ years of experience in product management, familiarity with agile methodology."
         responsibilities:
           type: string
           description: Responsibilities of the position
+          example: "Define product vision and strategy; manage project lifecycle."
         posted_date:
           type: string
           format: date-time
           description: Date when the vacancy is posted
+          example: "2024-10-01T09:00:00Z"
         expiry_date:
           type: string
           format: date-time
           description: Expiration date of the vacancy
+          example: "2024-12-31T23:59:59Z"
         status:
           type: string
           description: Status of the vacancy (e.g., open, closed)
+          example: "Open"
         remote:
           type: boolean
           description: Indicates if the position is remote
+          example: false
         contact_email:
           type: string
           format: email
           description: Contact email for applications
-      Error:
+          example: "apply@company.com"
+
     Vacancy:
       type: object
       properties:
         id:
           type: integer
           description: Unique identifier for the vacancy
+          example: 101
         title:
           type: string
           description: Title of the vacancy
+          example: "Backend Developer"
         description:
           type: string
           description: Detailed description of the vacancy
+          example: "Responsible for building and optimizing backend services."
         company_id:
           type: integer
           description: ID of the company posting the vacancy
+          example: 42
         location:
           type: string
           description: Location of the vacancy
+          example: "Remote"
         salary:
           type: number
           format: float
           description: Salary offered for the vacancy
+          example: 85000.00
         employment_type:
           type: string
           description: Type of employment (e.g., full-time, part-time)
+          example: "Contract"
         requirements:
           type: string
           description: Requirements for the vacancy
+          example: "Experience with RESTful APIs, proficiency in Golang and SQL."
         responsibilities:
           type: string
           description: Responsibilities of the position
+          example: "Develop and maintain backend services for our main application."
         posted_date:
           type: string
           format: date-time
           description: Date when the vacancy was posted
+          example: "2024-10-01T09:00:00Z"
         expiry_date:
           type: string
           format: date-time
           description: Date when the vacancy expires
+          example: "2024-11-01T23:59:59Z"
         status:
           type: string
           description: Current status of the vacancy (e.g., open, closed)
+          example: "Closed"
         remote:
           type: boolean
           description: Indicates if the position is remote
+          example: true
         contact_email:
           type: string
           format: email
           description: Contact email for applications
+          example: "contact@company.com"
         created_at:
           type: string
           format: date-time
           description: Timestamp of when the record was created
+          example: "2024-10-01T09:00:00Z"
         updated_at:
           type: string
           format: date-time
           description: Timestamp of when the record was last updated
+          example: "2024-10-20T12:00:00Z"
     Post:
       type: object
       properties:
